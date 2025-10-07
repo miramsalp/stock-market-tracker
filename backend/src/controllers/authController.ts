@@ -2,6 +2,9 @@ import * as authService from '../services/authService.js';
 import { type Request, type Response } from 'express';
 import { generateAuthToken } from '../utils/authUtil.js';
 
+// @desc    Register a new user
+// @route   POST /api/auth/register
+// @access  Public
 export const register = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
@@ -20,6 +23,9 @@ export const register = async (req: Request, res: Response) => {
     }
 }
 
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
