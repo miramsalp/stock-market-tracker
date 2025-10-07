@@ -1,5 +1,6 @@
 import express from 'express';
 import { initializePrisma } from './utils/prisma.js';
+import authRoutes from './routes/authRoutes.js';
 
 initializePrisma();
 
@@ -13,5 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'Hello World!' });
 });
+
+app.use('/api/auth', authRoutes);
 
 export default app;
