@@ -1,6 +1,7 @@
 import express from 'express';
 import { initializePrisma } from './utils/prisma.js';
 import authRoutes from './routes/authRoutes.js';
+import watchlistItemRoutes from './routes/watchlistItemRoutes.js';
 
 initializePrisma();
 
@@ -16,5 +17,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/watchlist', watchlistItemRoutes);
 
 export default app;
