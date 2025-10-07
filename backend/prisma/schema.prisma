@@ -19,4 +19,17 @@ model User {
   password  String
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  watchlist WatchlistItem[] 
+}
+
+model WatchlistItem {
+  id        Int      @id @default(autoincrement())
+  symbol    String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([symbol, userId])
 }
