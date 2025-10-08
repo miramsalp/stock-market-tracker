@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   watchlist WatchlistItem[]
+  positions Position[]
 }
 
 model WatchlistItem {
@@ -30,6 +31,19 @@ model WatchlistItem {
   user      User     @relation(fields: [userId], references: [id])
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([symbol, userId])
+}
+
+model Position {
+  id           Int      @id @default(autoincrement())
+  symbol       String
+  quantity     Float
+  averagePrice Float
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  createAt     DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@unique([symbol, userId])
 }
