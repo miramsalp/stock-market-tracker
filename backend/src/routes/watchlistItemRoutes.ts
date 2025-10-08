@@ -4,8 +4,9 @@ import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.get('/', authenticateToken, getWatchlistItems);
-router.post('/', authenticateToken, addWatchlistItem);
-router.delete('/:symbol', authenticateToken, removeWatchlistItem);
+router.use(authenticateToken);
+
+router.route('/').get(getWatchlistItems).post(addWatchlistItem);
+router.route('/:symbol').delete(removeWatchlistItem);
 
 export default router;
