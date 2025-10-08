@@ -1,10 +1,6 @@
 import { prisma } from "../utils/prisma.js";
-
-interface newPosition {
-    symbol: string;
-    quantity: number;
-    averagePrice: number;
-}
+import { type newPosition, type PositionWithPnl } from "../types/positionTypes.js";
+import { fetchStockPrice } from "./dataService.js";
 
 // add a new position for a user
 export const addPosition = async (userId: number, position: newPosition) => {
@@ -37,6 +33,40 @@ export const getPositions = async (userId: number) => {
     });
     return positions;
 }
+// get all positions with P&L for a user
+export const fetchPositionsWithPnl = async (userId: number): Promise<PositionWithPnl[]> => {
+    const positions = await prisma.position.findMany({
+        where: { userId },
+    });
+
+    const positionsPromises = positions.map(async (position) => {
+        let currentPrice = position.averagePrice;
+        
+        try {
+            const stockData = await fetchStockPrice(position.symbol);
+            currentPrice = stockData.price;
+        } catch (error) {
+            console.warn(`[P&L Error] Failed to fetch price for ${position.symbol}. Using average price.`);
+        }
+
+        const pnl = (currentPrice - position.averagePrice) * position.quantity;
+
+        const totalCost = position.averagePrice * position.quantity;
+        const returnPercentage = totalCost === 0 ? 0 : (pnl / totalCost) * 100;
+        return {
+            id: position.id,
+            symbol: position.symbol,
+            quantity: position.quantity,
+            averagePrice: position.averagePrice,
+            currentPrice: parseFloat(currentPrice.toFixed(2)),
+            pnl: parseFloat(pnl.toFixed(2)),
+            return: parseFloat(returnPercentage.toFixed(2)),
+        } as PositionWithPnl;
+    });
+
+    const positionsWithPnl = await Promise.all(positionsPromises);
+    return positionsWithPnl;
+};
 
 // update a position for a user
 export const updatePosition = async (userId: number, position: newPosition) => {

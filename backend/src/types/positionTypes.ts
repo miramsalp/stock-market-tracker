@@ -20,3 +20,9 @@ export interface NewsItem {
     url: string;
     publishedDate: string;
 }
+
+export interface newPosition {
+    symbol: string;
+    quantity: number;
+    averagePrice: number;
+}

@@ -8,8 +8,8 @@ import * as positionService from "../services/positionService.js";
 export const getAllPositions = async (req: AuthRequest, res: Response) => {
     const userId = req.userId!;
     try {
-        const positions = await positionService.getPositions(userId);
-        return res.json(positions);
+        const positions = await positionService.fetchPositionsWithPnl(userId);
+        return res.status(200).json(positions);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server error' });

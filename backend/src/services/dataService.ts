@@ -3,13 +3,18 @@ import { FMP_API_KEY, FMP_BASE_URL } from "../utils/apiConfig.js";
 import { type StockPrice, type NewsItem } from "../types/positionTypes.js";
 
 export const fetchStockPrice = async (symbol: string): Promise<StockPrice> => {
-    const url = `${FMP_BASE_URL}/quote/${symbol.toUpperCase()}?apikey=${FMP_API_KEY}`;
+    const url = `${FMP_BASE_URL}/historical-price-eod/full?symbol=${symbol.toUpperCase()}&apikey=${FMP_API_KEY}`;
     try {
         const response = await axios.get(url);
+        // response.data is an array of historical prices
+        if (!response.data || response.data.length === 0) {
+            throw new Error("No data found for symbol: " + symbol);
+        }
+        // take the most recent day's closing price
         const data = response.data[0];
         return {
             symbol: data.symbol,
-            price: data.price,
+            price: data.close,
         };
     } catch (error) {
         console.error("Error fetching stock price:", error);
