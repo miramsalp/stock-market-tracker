@@ -1,18 +1,6 @@
 import axios from "axios";
 import { FMP_API_KEY, FMP_BASE_URL } from "../utils/apiConfig.js";
-
-interface StockPrice {
-    symbol: string;
-    price: number;
-}
-
-interface NewsItem {
-    symbol: string;
-    title: string;
-    text: string;
-    url: string;
-    publishedDate: string;
-}
+import { type StockPrice, type NewsItem } from "../types/positionTypes.js";
 
 export const fetchStockPrice = async (symbol: string): Promise<StockPrice> => {
     const url = `${FMP_BASE_URL}/quote/${symbol.toUpperCase()}?apikey=${FMP_API_KEY}`;
