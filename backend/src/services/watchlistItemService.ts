@@ -11,20 +11,22 @@ export const getWatchlistItem = async (userId: number) => {
 
 export const addWatchlistItem = async (userId: number, symbol: string) => {
     // stock mostly in any app will be uppercase
-    symbol = symbol.toUpperCase();
+    const UpperSymbol = symbol.toUpperCase();
+    // console.log("Adding watchlist item:", UpperSymbol);
     const existingItem = await prisma.watchlistItem.findFirst({
         where: {
             userId: userId,
-            symbol: symbol
+            symbol: UpperSymbol
         }
     });
     if (existingItem) throw new Error("Item already in watchlist");
     const newItem = await prisma.watchlistItem.create({
         data: {
             userId: userId,
-            symbol: symbol
+            symbol: UpperSymbol
         }
     });
+    // console.log(newItem)
     return newItem;
 }
 
